@@ -1,11 +1,9 @@
-use std::error::Error;
 use std::fs::File;
 use std::io;
 use std::io::BufRead;
-use std::num::ParseIntError;
 use std::path::Path;
 
-pub fn main() -> io::Result<()> {
+pub fn main() -> io::Result<(i32, i32)> {
     let mut numbers = Vec::new();
 
     let lines = read_lines("inputs/1a.txt")?;
@@ -16,12 +14,12 @@ pub fn main() -> io::Result<()> {
             for number in &numbers {
                 if num + *number == 2020 {
                     solution_a = num * *number;
-                    println!("{} * {} == {}", num, *number, solution_a);
+                    debug!("{} * {} == {}", num, *number, solution_a);
                 } else if num + *number < 2020 {
                     for number2 in &numbers {
                         if num + *number + *number2 == 2020 {
                             solution_b = num * *number * *number2;
-                            println!("{} * {} * {} == {}", num, number, number2, solution_b);
+                            debug!("{} * {} * {} == {}", num, number, number2, solution_b);
                         }
                     }
                 }
@@ -30,7 +28,7 @@ pub fn main() -> io::Result<()> {
         }
     }
 
-    return Ok(());
+    return Ok((solution_a, solution_b));
 
     // if let Ok(lines) = read_lines("inputs/1a.txt") {
     //     for line in lines {

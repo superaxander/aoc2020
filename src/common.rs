@@ -1,6 +1,5 @@
 use core::convert::AsRef;
 use core::result::Result::Ok;
-use std::any::Any;
 use std::fs::File;
 use std::io;
 use std::io::{BufRead, BufReader, Result};
@@ -43,10 +42,10 @@ impl Runnable for Day {
             Day::Separated(func) => {
                 let now = Instant::now();
                 let result_a = func(false);
-                info!("Part b took {:#?}", now.elapsed());
+                info!("Part a took {:#?}", now.elapsed());
                 let now = Instant::now();
                 let result_b = func(true);
-                info!("Part a took {:#?}", now.elapsed());
+                info!("Part b took {:#?}", now.elapsed());
                 match result_a {
                     Ok(solution_a) => {
                         info!("Solution {}a: {}", name, solution_a);

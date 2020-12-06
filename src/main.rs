@@ -10,6 +10,7 @@ mod common;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 
 fn main() {
     pretty_env_logger::init();
@@ -18,5 +19,6 @@ fn main() {
     Day::SeparatedLong(day3::main).run("day 3");
     Day::Separated(day4::main).run("day 4");
     Day::Separated(day5::main).run("day 5");
+    Day::SeparatedUsize(day6::main).run("day 6");
 }
 

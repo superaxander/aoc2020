@@ -24,7 +24,7 @@ fn find_bags<'a>(re: &Regex, contained_in: &'a mut HashMap<&'a str, Vec<&'a str>
     for caps in re.captures_iter(other_bags.as_str()) {
         debug!("{:?}", caps);
         let count = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-        let bag = caps.get(1).unwrap().as_str();
+        let bag = caps.get(2).unwrap().as_str();
 
         contained_in.entry(bag.clone()).or_insert(Vec::new()).push(current_bag.as_str());
     }

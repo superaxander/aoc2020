@@ -27,24 +27,10 @@ pub fn main(do_b: bool) -> io::Result<i32> {
         if let Err((_, set)) = result {
             for i in set {
                 let instruction = instructions.get(i).unwrap();
-                let new_instruction;
-                match instruction.operator.as_str() {
-                    "nop" => {
-                        new_instruction =
-                            Instruction::new(String::from("jmp"), instruction.operand);
-                    }
-                    "jmp" => {
-                        new_instruction =
-                            Instruction::new(String::from("nop"), instruction.operand);
-                    }
-                    "acc" => {
-                        continue;
-                    }
-                    _ => panic!("Invalid file!"),
+                if instruction.operator.as_str() == "acc" {
+                    continue;
                 }
-                let mut copy = instructions.iter().collect::<Vec<&Instruction>>(); // Around 8x performance increase not cloning here and using do_run2
-                copy[i] = &new_instruction;
-                let result = do_run2(&copy);
+                let result = do_run2(&instructions, i);
                 if let Ok(acc) = result {
                     return Ok(acc);
                 }
@@ -95,7 +81,7 @@ fn do_run(instructions: &Vec<Instruction>) -> Result<i32, (i32, HashSet<usize>)>
     Ok(acc)
 }
 
-fn do_run2(instructions: &Vec<&Instruction>) -> Result<i32, i32> {
+fn do_run2(instructions: &Vec<Instruction>, changed_idx: usize) -> Result<i32, i32> {
     let mut set: HashSet<usize> = HashSet::new();
     let mut idx = 0;
     let mut acc = 0;
@@ -106,7 +92,13 @@ fn do_run2(instructions: &Vec<&Instruction>) -> Result<i32, i32> {
         debug!("Help: {:?}", instruction);
         match instruction.operator.as_str() {
             "nop" => {
-                idx += 1;
+                if idx == changed_idx {
+                    assert!(idx as i32 + instruction.operand >= 0);
+                    idx = (idx as i32 + instruction.operand) as usize;
+                    debug!("Jumping {} to {}", instruction.operand, idx);
+                } else {
+                    idx += 1;
+                }
             }
             "acc" => {
                 acc += instruction.operand;
@@ -114,9 +106,13 @@ fn do_run2(instructions: &Vec<&Instruction>) -> Result<i32, i32> {
                 idx += 1;
             }
             "jmp" => {
-                assert!(idx as i32 + instruction.operand >= 0);
-                idx = (idx as i32 + instruction.operand) as usize;
-                debug!("Jumping {} to {}", instruction.operand, idx);
+                if idx == changed_idx {
+                    idx += 1;
+                } else {
+                    assert!(idx as i32 + instruction.operand >= 0);
+                    idx = (idx as i32 + instruction.operand) as usize;
+                    debug!("Jumping {} to {}", instruction.operand, idx);
+                }
             }
             _ => {}
         }

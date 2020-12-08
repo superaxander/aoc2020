@@ -7,7 +7,9 @@ use std::path::Path;
 use std::time::Instant;
 
 pub fn read_lines<P>(filename: P) -> Result<io::Lines<BufReader<File>>>
-    where P: AsRef<Path>, {
+where
+    P: AsRef<Path>,
+{
     let file = File::open(filename)?;
     Ok(BufReader::new(file).lines())
 }
@@ -35,9 +37,7 @@ impl Runnable for Day {
                         info!("Solution {}a: {}", name, solution_a);
                         info!("Solution {}b: {}", name, solution_b);
                     }
-                    Err(err) => {
-                        error!("Error occurred running {}: {}", name, err)
-                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
                 }
             }
             Day::Separated(func) => {
@@ -51,19 +51,14 @@ impl Runnable for Day {
                     Ok(solution_a) => {
                         info!("Solution {}a: {}", name, solution_a);
                     }
-                    Err(err) => {
-                        error!("Error occurred running {}: {}", name, err)
-                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
                 }
-
 
                 match result_b {
                     Ok(solution_b) => {
                         info!("Solution {}b: {}", name, solution_b);
                     }
-                    Err(err) => {
-                        error!("Error occurred running {}: {}", name, err)
-                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
                 }
             }
             Day::SeparatedLong(func) => {
@@ -77,19 +72,14 @@ impl Runnable for Day {
                     Ok(solution_a) => {
                         info!("Solution {}a: {}", name, solution_a);
                     }
-                    Err(err) => {
-                        error!("Error occurred running {}: {}", name, err)
-                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
                 }
-
 
                 match result_b {
                     Ok(solution_b) => {
                         info!("Solution {}b: {}", name, solution_b);
                     }
-                    Err(err) => {
-                        error!("Error occurred running {}: {}", name, err)
-                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
                 }
             }
             Day::SeparatedUsize(func) => {
@@ -103,19 +93,14 @@ impl Runnable for Day {
                     Ok(solution_a) => {
                         info!("Solution {}a: {}", name, solution_a);
                     }
-                    Err(err) => {
-                        error!("Error occurred running {}: {}", name, err)
-                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
                 }
-
 
                 match result_b {
                     Ok(solution_b) => {
                         info!("Solution {}b: {}", name, solution_b);
                     }
-                    Err(err) => {
-                        error!("Error occurred running {}: {}", name, err)
-                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
                 }
             }
         }

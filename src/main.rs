@@ -2,12 +2,13 @@
 extern crate log;
 extern crate pretty_env_logger;
 
-use common::{Day, Runnable};
 use std::time::Instant;
 
+use common::{Day, Runnable};
+
+mod common;
 mod day1;
 mod day2;
-mod common;
 mod day3;
 mod day4;
 mod day5;
@@ -28,4 +29,3 @@ fn main() {
     Day::Separated(day8::main).run("day 8");
     info!("All days together took {:#?}", now.elapsed());
 }
-

@@ -19,25 +19,28 @@ pub fn main(do_b: bool) -> io::Result<i32> {
     let instructions: Vec<Instruction> = common::read_lines("inputs/8.txt")?
         .map(|line| line.unwrap())
         .map(|line| line.split(" ").map(String::from).collect::<Vec<String>>())
-        .map(|vec| Instruction::new(vec[0].clone(), vec[1].parse::<i32>().unwrap())).collect();
-    
+        .map(|vec| Instruction::new(vec[0].clone(), vec[1].parse::<i32>().unwrap()))
+        .collect();
+
     if do_b {
         let result = do_run(&instructions);
-        if let Err((_,set)) = result {
+        if let Err((_, set)) = result {
             for i in set {
                 let instruction = instructions.get(i).unwrap();
                 let new_instruction;
                 match instruction.operator.as_str() {
                     "nop" => {
-                        new_instruction = Instruction::new(String::from("jmp"), instruction.operand);
-                    },
+                        new_instruction =
+                            Instruction::new(String::from("jmp"), instruction.operand);
+                    }
                     "jmp" => {
-                        new_instruction = Instruction::new(String::from("nop"), instruction.operand);
-                    },
+                        new_instruction =
+                            Instruction::new(String::from("nop"), instruction.operand);
+                    }
                     "acc" => {
                         continue;
                     }
-                    _ => panic!("Invalid file!")
+                    _ => panic!("Invalid file!"),
                 }
                 let mut copy = instructions.iter().collect::<Vec<&Instruction>>(); // Around 8x performance increase not cloning here and using do_run2
                 copy[i] = &new_instruction;
@@ -47,12 +50,12 @@ pub fn main(do_b: bool) -> io::Result<i32> {
                 }
             }
         }
-        
+
         error!("Solution not found");
         Ok(-1)
     } else {
         let result = do_run(&instructions);
-        if let Err((acc,_)) = result {
+        if let Err((acc, _)) = result {
             return Ok(acc);
         }
         error!("Expected an err results for part a");
@@ -60,7 +63,7 @@ pub fn main(do_b: bool) -> io::Result<i32> {
     }
 }
 
-fn do_run(instructions: &Vec<Instruction>) -> Result<i32, (i32,HashSet<usize>)> {
+fn do_run(instructions: &Vec<Instruction>) -> Result<i32, (i32, HashSet<usize>)> {
     let mut set: HashSet<usize> = HashSet::new();
     let mut idx = 0;
     let mut acc = 0;
@@ -76,7 +79,7 @@ fn do_run(instructions: &Vec<Instruction>) -> Result<i32, (i32,HashSet<usize>)> 
             "acc" => {
                 acc += instruction.operand;
                 debug!("{}: Accumulating {} to {}", idx, instruction.operand, acc);
-                idx+= 1;
+                idx += 1;
             }
             "jmp" => {
                 assert!(idx as i32 + instruction.operand >= 0);
@@ -86,7 +89,7 @@ fn do_run(instructions: &Vec<Instruction>) -> Result<i32, (i32,HashSet<usize>)> 
             _ => {}
         }
         if set.contains(&idx) {
-            return Err((acc, set))
+            return Err((acc, set));
         }
     }
     Ok(acc)
@@ -108,7 +111,7 @@ fn do_run2(instructions: &Vec<&Instruction>) -> Result<i32, i32> {
             "acc" => {
                 acc += instruction.operand;
                 debug!("{}: Accumulating {} to {}", idx, instruction.operand, acc);
-                idx+= 1;
+                idx += 1;
             }
             "jmp" => {
                 assert!(idx as i32 + instruction.operand >= 0);
@@ -118,9 +121,8 @@ fn do_run2(instructions: &Vec<&Instruction>) -> Result<i32, i32> {
             _ => {}
         }
         if set.contains(&idx) {
-            return Err(acc)
+            return Err(acc);
         }
     }
     Ok(acc)
 }
-

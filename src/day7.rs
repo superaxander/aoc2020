@@ -17,7 +17,6 @@ impl Bag {
     }
 }
 
-
 pub fn main(do_b: bool) -> io::Result<usize> {
     let re = Regex::new(r"(\d+) (\w+ \w+) \w+(?:(?:, )|.)").unwrap();
 
@@ -34,17 +33,29 @@ pub fn main(do_b: bool) -> io::Result<usize> {
             debug!("{:?}", caps);
             let count = caps.get(1).unwrap().as_str().parse::<usize>().unwrap();
             let bag = String::from(caps.get(2).unwrap().as_str());
-            
+
             if do_b {
-                reverse_map.entry(split[0].clone()).or_insert_with(HashSet::new).insert(Bag::new(bag.clone(), count));
+                reverse_map
+                    .entry(split[0].clone())
+                    .or_insert_with(HashSet::new)
+                    .insert(Bag::new(bag.clone(), count));
             } else {
-                contained_in.entry(bag.clone()).or_insert_with(HashSet::new).insert(split[0].clone());
+                contained_in
+                    .entry(bag.clone())
+                    .or_insert_with(HashSet::new)
+                    .insert(split[0].clone());
             }
-        };
+        }
     }
     if do_b {
-        let set: Vec<Bag> = reverse_map.iter().filter(|(bag, _)| **bag == "shiny gold").flat_map(|(_, contents)| contents).cloned().collect();
-        let count: usize = set.iter().map(|bag| bag.count).sum::<usize>() + do_count(&mut reverse_map, &set, 1);
+        let set: Vec<Bag> = reverse_map
+            .iter()
+            .filter(|(bag, _)| **bag == "shiny gold")
+            .flat_map(|(_, contents)| contents)
+            .cloned()
+            .collect();
+        let count: usize =
+            set.iter().map(|bag| bag.count).sum::<usize>() + do_count(&mut reverse_map, &set, 1);
         Ok(count)
     } else {
         let mut set: HashSet<String> = HashSet::new();
@@ -53,24 +64,40 @@ pub fn main(do_b: bool) -> io::Result<usize> {
         let mut length = set.len();
         loop {
             let cloned = set.clone();
-            set.extend(cloned.iter().flat_map(|x| contained_in.get(x).unwrap_or_else(|| &empty).iter().cloned()));
-            if length == set.len() { break; }
+            set.extend(cloned.iter().flat_map(|x| {
+                contained_in
+                    .get(x)
+                    .unwrap_or_else(|| &empty)
+                    .iter()
+                    .cloned()
+            }));
+            if length == set.len() {
+                break;
+            }
             length = set.len();
         }
         Ok(length)
     }
 }
 
-fn do_count(reverse_map: &mut HashMap<String, HashSet<Bag>>, set: &Vec<Bag>, multiplier: usize) -> usize {
+fn do_count(
+    reverse_map: &mut HashMap<String, HashSet<Bag>>,
+    set: &Vec<Bag>,
+    multiplier: usize,
+) -> usize {
     let mut count: usize = 0;
     debug!("{:?}, {}", set, multiplier);
 
     for bag in set {
-        let set2: Vec<Bag> = reverse_map.iter().filter(|(bag2, _)| **bag2 == bag.color).flat_map(|(_, contents)| contents).cloned().collect();
+        let set2: Vec<Bag> = reverse_map
+            .iter()
+            .filter(|(bag2, _)| **bag2 == bag.color)
+            .flat_map(|(_, contents)| contents)
+            .cloned()
+            .collect();
         count += multiplier * bag.count * set2.iter().map(|bag2| bag2.count).sum::<usize>();
         count += do_count(reverse_map, &set2, multiplier * bag.count);
     }
 
     return count;
 }
-

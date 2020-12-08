@@ -21,6 +21,7 @@ impl Bag {
 pub fn main(do_b: bool) -> io::Result<usize> {
     let re = Regex::new(r"(\d+) (\w+ \w+) \w+(?:(?:, )|.)").unwrap();
 
+    let empty = HashSet::new();
     let mut contained_in: HashMap<String, HashSet<String>> = HashMap::new();
     let mut reverse_map: HashMap<String, HashSet<Bag>> = HashMap::new();
 
@@ -35,9 +36,9 @@ pub fn main(do_b: bool) -> io::Result<usize> {
             let bag = String::from(caps.get(2).unwrap().as_str());
             
             if do_b {
-                reverse_map.entry(split[0].clone()).or_insert(HashSet::new()).insert(Bag::new(bag.clone(), count));
+                reverse_map.entry(split[0].clone()).or_insert_with(HashSet::new).insert(Bag::new(bag.clone(), count));
             } else {
-                contained_in.entry(bag.clone()).or_insert(HashSet::new()).insert(split[0].clone());
+                contained_in.entry(bag.clone()).or_insert_with(HashSet::new).insert(split[0].clone());
             }
         };
     }
@@ -52,7 +53,6 @@ pub fn main(do_b: bool) -> io::Result<usize> {
         let mut length = set.len();
         loop {
             let cloned = set.clone();
-            let empty = HashSet::new();
             set.extend(cloned.iter().flat_map(|x| contained_in.get(x).unwrap_or_else(|| &empty).iter().cloned()));
             if length == set.len() { break; }
             length = set.len();

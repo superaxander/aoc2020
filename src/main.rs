@@ -13,6 +13,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 fn main() {
     pretty_env_logger::init();
@@ -24,6 +25,7 @@ fn main() {
     Day::Separated(day5::main).run("day 5");
     Day::SeparatedUsize(day6::main).run("day 6");
     Day::SeparatedUsize(day7::main).run("day 7");
+    Day::Separated(day8::main).run("day 8");
     info!("All days together took {:#?}", now.elapsed());
 }
 

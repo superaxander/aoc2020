@@ -33,6 +33,5 @@ pub fn main(do_b: bool) -> io::Result<usize> {
     }
 
     count += set.len();
-
     Ok(count)
 }

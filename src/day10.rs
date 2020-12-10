@@ -29,14 +29,6 @@ pub fn main(do_b: bool) -> io::Result<usize> {
                     let jump_2 = nums[idx + 1];
                     table[jump_2] += (jump_2 - last <= 3) as usize * table[last];
                 }
-                3 => {
-                    let jump = nums[idx];
-                    table[jump] += table[last];
-                    let jump_2 = nums[idx + 1];
-                    let jump_3 = nums[idx + 2];
-                    table[jump_2] += (jump_2 - last <= 3) as usize * table[last];
-                    table[jump_3] += (jump_3 - last <= 3) as usize * table[last];
-                }
                 _ => {
                     let jump_1 = nums[idx];
                     let jump_2 = nums[idx + 1];

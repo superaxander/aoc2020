@@ -9,10 +9,8 @@ pub fn main(do_b: bool) -> io::Result<usize> {
 
     nums.sort_unstable_by_key(|x| -(*x as i32));
     if do_b {
-        let mut table = Vec::<usize>::with_capacity(*nums.first().unwrap() as usize + 1); // TODO: Reduce size to 4
-        for _ in 0..*nums.first().unwrap() + 1 {
-            table.push(0);
-        }
+        let max = *nums.first().unwrap() + 1;
+        let mut table: Vec<usize> = vec![0; max];
         table[0] = 1;
         nums.push(0);
         loop {
@@ -21,14 +19,14 @@ pub fn main(do_b: bool) -> io::Result<usize> {
             if length == 0 {
                 break;
             }
-            let jump = nums[nums.len() - 1];
+            let jump = nums[length - 1];
             table[jump] += table[min];
             if length == 1 {
                 break;
             }
             match jump - min {
                 1 => {
-                    let jump = nums[nums.len() - 2];
+                    let jump = nums[length - 2];
                     match jump - min {
                         2 => {
                             table[jump] += table[min];
@@ -55,8 +53,7 @@ pub fn main(do_b: bool) -> io::Result<usize> {
                         table[jump] += table[min];
                     }
                 }
-                3 => {}
-                _ => panic!(),
+                _ => {} // 3
             }
         }
         debug!("{:?}", table);
@@ -70,8 +67,8 @@ pub fn main(do_b: bool) -> io::Result<usize> {
             let diff = min - current;
             match diff {
                 1 => jolt_1 += 1,
-                3 => jolt_3 += 1,
-                _ => panic!("Not expecting jump of {}?!", diff),
+                _ => jolt_3 += 1, // 3
+                                  //_ => panic!("Not expecting jump of {}?!", diff),
             }
             current = min;
         }

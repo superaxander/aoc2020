@@ -1,5 +1,5 @@
 use std::io;
-use std::time::Instant;
+// use std::time::Instant;
 
 use crate::common;
 
@@ -7,7 +7,7 @@ pub fn main(do_b: bool) -> io::Result<usize> {
     let mut nums: Vec<usize> = common::read_lines("inputs/10.txt")?
         .map(|x| x.unwrap().parse::<usize>().unwrap())
         .collect();
-    let start = Instant::now();
+    // let start = Instant::now();
     if do_b {
         nums.sort_unstable();
         let len = nums.len();
@@ -49,7 +49,7 @@ pub fn main(do_b: bool) -> io::Result<usize> {
             last = nums[idx];
             debug!("{}", idx);
         }
-        info!("{:#?}", start.elapsed());
+        // info!("{:#?}", start.elapsed());
         debug!("{:?}", table);
         Ok(*table.last().unwrap())
     } else {

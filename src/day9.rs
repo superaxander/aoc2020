@@ -1,6 +1,5 @@
-use std::collections::{HashSet, LinkedList};
-use std::io::Error;
-use std::{cmp, io};
+use std::collections::LinkedList;
+use std::io;
 
 use crate::common;
 
@@ -26,7 +25,7 @@ pub fn main_a() -> io::Result<usize> {
         let mut found = false;
         if idx >= PREAMBLE_SIZE {
             'outer: for i in 0..PREAMBLE_SIZE {
-                let search_num = (num as i64 - nums[i] as i64);
+                let search_num = num as i64 - nums[i] as i64;
                 if search_num < 0 {
                     continue;
                 }

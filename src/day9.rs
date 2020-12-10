@@ -58,7 +58,7 @@ pub fn main_b(res_a: usize) -> io::Result<usize> {
     let mut sum = 0;
     for line in lines {
         let string = line?;
-        let num = string.parse::<usize>().unwrap(); // Even though I reload
+        let num = string.parse::<usize>().unwrap(); // Even though I reload it's still plenty fast
                                                     // debug!("{:?} + {}", nums, num);
         if sum + num == res_a {
             return Ok(nums.iter().max().unwrap() + nums.iter().min().unwrap());

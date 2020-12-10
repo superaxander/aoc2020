@@ -8,6 +8,7 @@ use common::{Day, Runnable};
 
 mod common;
 mod day1;
+mod day10;
 mod day2;
 mod day3;
 mod day4;
@@ -29,5 +30,6 @@ fn main() {
     Day::SeparatedUsize(day7::main).run("day 7");
     Day::Separated(day8::main).run("day 8");
     Day::CombinedUsize(day9::main).run("day 9");
+    Day::SeparatedUsize(day10::main).run("day 10");
     info!("All days together took {:#?}", now.elapsed());
 }

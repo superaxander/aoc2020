@@ -1,4 +1,5 @@
 use std::io;
+use std::time::Instant;
 
 use crate::common;
 
@@ -6,59 +7,53 @@ pub fn main(do_b: bool) -> io::Result<usize> {
     let mut nums: Vec<usize> = common::read_lines("inputs/10.txt")?
         .map(|x| x.unwrap().parse::<usize>().unwrap())
         .collect();
-
-    nums.sort_unstable_by_key(|x| -(*x as i32));
+    let start = Instant::now();
     if do_b {
-        let max = *nums.first().unwrap() + 1;
+        nums.sort_unstable();
+        let len = nums.len();
+        let max = *nums.last().unwrap() + 1;
         let mut table: Vec<usize> = vec![0; max];
         table[0] = 1;
-        nums.push(0);
-        loop {
-            let min = nums.pop().unwrap();
-            let length = nums.len();
-            if length == 0 {
-                break;
-            }
-            let jump = nums[length - 1];
-            table[jump] += table[min];
-            if length == 1 {
-                break;
-            }
-            match jump - min {
+        let mut last = 0;
+        for idx in 0..len {
+            match len - idx {
                 1 => {
-                    let jump = nums[length - 2];
-                    match jump - min {
-                        2 => {
-                            table[jump] += table[min];
-                            if length == 2 {
-                                continue;
-                            }
-                            let jump = nums[length - 3];
-                            if jump - min == 3 {
-                                table[jump] += table[min];
-                            }
-                        }
-                        3 => {
-                            table[jump] += table[min];
-                        }
-                        _ => {
-                            // Jump too far
-                            continue;
-                        }
-                    }
+                    // No need to check always possible
+                    let jump = nums[idx];
+                    table[jump] += table[last];
                 }
                 2 => {
-                    let jump = nums[length - 2];
-                    if jump - min == 3 {
-                        table[jump] += table[min];
-                    }
+                    // No need to check always possible
+                    let jump = nums[idx];
+                    table[jump] += table[last];
+                    let jump_2 = nums[idx + 1];
+                    table[jump_2] += (jump_2 - last <= 3) as usize * table[last];
                 }
-                _ => {} // 3
+                3 => {
+                    let jump = nums[idx];
+                    table[jump] += table[last];
+                    let jump_2 = nums[idx + 1];
+                    let jump_3 = nums[idx + 2];
+                    table[jump_2] += (jump_2 - last <= 3) as usize * table[last];
+                    table[jump_3] += (jump_3 - last <= 3) as usize * table[last];
+                }
+                _ => {
+                    let jump_1 = nums[idx];
+                    let jump_2 = nums[idx + 1];
+                    let jump_3 = nums[idx + 2];
+                    table[jump_1] += table[last];
+                    table[jump_2] += (jump_2 - last <= 3) as usize * table[last];
+                    table[jump_3] += (jump_3 - last <= 3) as usize * table[last];
+                }
             }
+            last = nums[idx];
+            debug!("{}", idx);
         }
+        info!("{:#?}", start.elapsed());
         debug!("{:?}", table);
         Ok(*table.last().unwrap())
     } else {
+        nums.sort_unstable_by_key(|x| -(*x as i32));
         let mut jolt_1 = 0;
         let mut jolt_3 = 1;
         let mut current = 0;

@@ -23,8 +23,6 @@ impl Debug for State {
 }
 
 pub fn main(do_b: bool) -> io::Result<usize> {
-    let mut valid = 0;
-
     let mut map: Vec<Vec<State>> = common::read_lines("inputs/11.txt")?
         .map(|x| {
             x.unwrap()

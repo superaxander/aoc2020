@@ -20,6 +20,7 @@ pub enum Day {
     Separated(fn(bool) -> io::Result<i32>),
     SeparatedLong(fn(bool) -> io::Result<i64>),
     SeparatedUsize(fn(bool) -> io::Result<usize>),
+    SeparatedULong(fn(bool) -> io::Result<u64>),
 }
 
 pub(crate) trait Runnable {
@@ -96,6 +97,27 @@ impl Runnable for Day {
                 }
             }
             Day::SeparatedUsize(func) => {
+                let now = Instant::now();
+                let result_a = func(false);
+                info!("Part a took {:#?}", now.elapsed());
+                let now = Instant::now();
+                let result_b = func(true);
+                info!("Part b took {:#?}", now.elapsed());
+                match result_a {
+                    Ok(solution_a) => {
+                        info!("Solution {}a: {}", name, solution_a);
+                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
+                }
+
+                match result_b {
+                    Ok(solution_b) => {
+                        info!("Solution {}b: {}", name, solution_b);
+                    }
+                    Err(err) => error!("Error occurred running {}: {}", name, err),
+                }
+            }
+            Day::SeparatedULong(func) => {
                 let now = Instant::now();
                 let result_a = func(false);
                 info!("Part a took {:#?}", now.elapsed());

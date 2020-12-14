@@ -1,7 +1,7 @@
+use regex::Regex;
+
 use std::collections::{HashMap, HashSet};
 use std::io;
-
-use regex::Regex;
 
 use crate::common;
 

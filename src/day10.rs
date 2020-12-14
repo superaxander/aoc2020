@@ -1,7 +1,8 @@
 use std::io;
-// use std::time::Instant;
 
 use crate::common;
+
+// use std::time::Instant;
 
 pub fn main(do_b: bool) -> io::Result<usize> {
     let mut nums: Vec<usize> = common::read_lines("inputs/10.txt")?

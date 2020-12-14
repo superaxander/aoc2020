@@ -6,13 +6,8 @@ use crate::common;
 const PREAMBLE_SIZE: usize = 25;
 
 pub fn main() -> io::Result<(usize, usize)> {
-    return match main_a() {
-        Ok(res_a) => match main_b(res_a) {
-            Ok(res_b) => Ok((res_a, res_b)),
-            Err(e) => Err(e),
-        },
-        Err(e) => Err(e),
-    };
+    let res_a = main_a()?;
+    return Ok((res_a, main_b(res_a)?));
 }
 
 pub fn main_a() -> io::Result<usize> {
